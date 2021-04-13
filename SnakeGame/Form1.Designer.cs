@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace SnakeGame
 {
     partial class Form1
@@ -40,7 +42,7 @@ namespace SnakeGame
             // 
             // pbCanvas
             // 
-            this.pbCanvas.BackColor = System.Drawing.SystemColors.GrayText;
+            this.pbCanvas.BackColor = System.Drawing.Color.Gray;
             this.pbCanvas.Location = new System.Drawing.Point(13, 13);
             this.pbCanvas.Name = "pbCanvas";
             this.pbCanvas.Size = new System.Drawing.Size(541, 560);
@@ -90,15 +92,14 @@ namespace SnakeGame
             this.Controls.Add(this.pbCanvas);
             this.Name = "Form1";
             this.Text = "Snake";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.update);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyUp);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Update);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Keyisdown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Keyisup);
             ((System.ComponentModel.ISupportInitialize)(this.pbCanvas)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
         #endregion
 
         private System.Windows.Forms.PictureBox pbCanvas;

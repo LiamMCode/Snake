@@ -19,7 +19,7 @@ namespace SnakeGame
 
             if (keyTable[key] == null)
             {
-                // if the hashtable is empty then we return flase
+                // if the hashtable is empty then we return false
                 return false;
             }
             // if the hastable is not empty then we return true
@@ -27,7 +27,7 @@ namespace SnakeGame
         }
 
         // this function will change state of the keys and the player with it this function has two arguments Key and state
-        public static void changeState(Keys key, bool state)
+        public static void ChangeState(Keys key, bool state)
         {
             keyTable[key] = state;
         }

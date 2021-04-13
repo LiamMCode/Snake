@@ -12,8 +12,8 @@ namespace SnakeGame
 {
     public partial class Form1 : Form
     {
-        private List<Body> Snake = new List<Body>(); // creating an list array for the snake
-        private Body food = new Body(); // creating a single Body class called food
+        private List<Circle> Snake = new List<Circle>(); // creating an list array for the snake
+        private Circle food = new Circle(); // creating a single Body class called food
 
         public Form1()
         {
@@ -24,22 +24,22 @@ namespace SnakeGame
             gameTimer.Tick += updateScreen; // linking a updateScreen function to the timer
             gameTimer.Start(); // starting the timer
 
-            startGame(); // running the start game function
+            StartGame(); // running the start game function
         }
 
-        private void keyDown(object sender, KeyEventArgs e)
+        private void Keyisdown(object sender, KeyEventArgs e)
         {
             // the key down event will trigger the change state from the Input class
-            Input.changeState(e.KeyCode, true);
+            Input.ChangeState(e.KeyCode, true);
         }
 
-        private void keyUp(object sender, KeyEventArgs e)
+        private void Keyisup(object sender, KeyEventArgs e)
         {
             // the key up event will trigger the change state from the Input class
-            Input.changeState(e.KeyCode, false);
+            Input.ChangeState(e.KeyCode, false);
         }
 
-        private void update(object sender, PaintEventArgs e)
+        private void Update(object sender, PaintEventArgs e)
         {
             Graphics canvas = e.Graphics; // create a new graphics class called canvas
 
@@ -55,7 +55,7 @@ namespace SnakeGame
                     if (i == 0)
                     {
                         // colour the head of the snake black
-                        snakeColour = Brushes.Black;
+                        snakeColour = Brushes.Red;
                     }
                     else
                     {
@@ -71,7 +71,7 @@ namespace SnakeGame
                                             ));
 
                     // draw food
-                    canvas.FillEllipse(Brushes.Red,
+                    canvas.FillEllipse(Brushes.Pink,
                                         new Rectangle(
                                             food.X * Settings.Width,
                                             food.Y * Settings.Height,
@@ -88,20 +88,20 @@ namespace SnakeGame
                 label3.Visible = true;
             }
         }
-        private void startGame()
+        private void StartGame()
         {
             label3.Visible = false; // set label 3 to invisible
             new Settings(); // create a new instance of settings
             Snake.Clear(); // clear all snake parts
-            Body head = new Body { X = 10, Y = 5 }; // create a new head for the snake
+            Circle head = new Circle { X = 10, Y = 5 }; // create a new head for the snake
             Snake.Add(head); // add the gead to the snake array
 
             label2.Text = Settings.Score.ToString(); // show the score to the label 2
-
-            generateFood(); // run the generate food function
+            Settings.GameOver = false;
+            GenerateFood(); // run the generate food function
         }
 
-        private void move()
+        private void MoveSnake()
         {
             // the main loop for the snake head and parts
             for (int i = Snake.Count - 1; i >= 0; i--)
@@ -155,7 +155,7 @@ namespace SnakeGame
                     if (Snake[0].X == food.X && Snake[0].Y == food.Y)
                     {
                         //if so we run the eat function
-                        eat();
+                        Eat();
                     }
 
                 }
@@ -168,21 +168,21 @@ namespace SnakeGame
             }
         }
 
-        private void generateFood()
+        private void GenerateFood()
         {
             int maxXpos = pbCanvas.Size.Width / Settings.Width;
             // create a maximum X position int with half the size of the play area
             int maxYpos = pbCanvas.Size.Height / Settings.Height;
             // create a maximum Y position int with half the size of the play area
             Random rnd = new Random(); // create a new random class
-            food = new Body { X = rnd.Next(0, maxXpos), Y = rnd.Next(0, maxYpos) };
+            food = new Circle { X = rnd.Next(0, maxXpos), Y = rnd.Next(0, maxYpos) };
             // create a new food with a random x and y
         }
-        private void eat()
+        private void Eat()
         {
             // add a part to body
 
-            Body body = new Body
+            Circle body = new Circle
             {
                 X = Snake[Snake.Count - 1].X,
                 Y = Snake[Snake.Count - 1].Y
@@ -192,7 +192,7 @@ namespace SnakeGame
             Snake.Add(body); // add the part to the snakes array
             Settings.Score += Settings.Points; // increase the score for the game
             label2.Text = Settings.Score.ToString(); // show the score on the label 2
-            generateFood(); // run the generate food function
+            GenerateFood(); // run the generate food function
         }
         private void die()
         {
@@ -207,7 +207,7 @@ namespace SnakeGame
                 // if the game over is true and player presses enter the start game function is called
                 if (Input.KeyPress(Keys.Enter))
                 {
-                    startGame();
+                    StartGame();
                 }
             }
             else
@@ -230,7 +230,7 @@ namespace SnakeGame
                 {
                     Settings.direction = Directions.Down;
                 }
-                move(); // run move player function
+                MoveSnake(); // run move player function
             }
             pbCanvas.Invalidate(); // refresh the picture box and update the graphics on it
         }
