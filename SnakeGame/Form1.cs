@@ -21,7 +21,7 @@ namespace SnakeGame
             new Settings(); // linking the Settings Class to this Form
 
             gameTimer.Interval = 1000 / Settings.Speed; // Changing the game time to settings speed
-            gameTimer.Tick += updateScreen; // linking a updateScreen function to the timer
+            gameTimer.Tick += UpdateScreen; // linking a updateScreen function to the timer
             gameTimer.Start(); // starting the timer
 
             StartGame(); // running the start game function
@@ -39,7 +39,7 @@ namespace SnakeGame
             Input.ChangeState(e.KeyCode, false);
         }
 
-        private void Update(object sender, PaintEventArgs e)
+        private void UpdateCanvas(object sender, PaintEventArgs e)
         {
             Graphics canvas = e.Graphics; // create a new graphics class called canvas
 
@@ -138,6 +138,7 @@ namespace SnakeGame
                         // end the game is snake either reaches edge of the canvas
 
                         die();
+
                     }
 
                     // detect collision with the body
@@ -199,7 +200,7 @@ namespace SnakeGame
             // change the game over Boolean to true
             Settings.GameOver = true;
         }
-        private void updateScreen(object sender, EventArgs e)
+        private void UpdateScreen(object sender, EventArgs e)
         {
             // this is the Timers update screen function. each tick will run this function
             if (Settings.GameOver == true)

@@ -92,7 +92,7 @@ namespace SnakeGame
             this.Controls.Add(this.pbCanvas);
             this.Name = "Form1";
             this.Text = "Snake";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Update);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.UpdateCanvas);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Keyisdown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Keyisup);
             ((System.ComponentModel.ISupportInitialize)(this.pbCanvas)).EndInit();
