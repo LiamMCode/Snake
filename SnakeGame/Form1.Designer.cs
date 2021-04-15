@@ -43,6 +43,7 @@ namespace SnakeGame
             // pbCanvas
             // 
             this.pbCanvas.BackColor = System.Drawing.Color.Gray;
+            this.pbCanvas.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pbCanvas.Location = new System.Drawing.Point(13, 13);
             this.pbCanvas.Name = "pbCanvas";
             this.pbCanvas.Size = new System.Drawing.Size(541, 560);
@@ -75,11 +76,15 @@ namespace SnakeGame
             this.label3.BackColor = System.Drawing.Color.Black;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.Yellow;
-            this.label3.Location = new System.Drawing.Point(215, 226);
+            this.label3.Location = new System.Drawing.Point(587, 183);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 25);
             this.label3.TabIndex = 3;
             this.label3.Text = "End Text";
+            // 
+            // gameTimer
+            // 
+            this.gameTimer.Enabled = true;
             // 
             // Form1
             // 

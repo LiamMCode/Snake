@@ -11,12 +11,11 @@ namespace SnakeGame
     class Input
     {
         // creating a new instance of Hashtable class this class is used to optimize the keys inserted in it
-        private static Hashtable keyTable = new Hashtable(); 
+        private static Hashtable keyTable = new(); 
 
         public static bool KeyPress(Keys key)
         {
             // this function will return a key back to the class
-
             if (keyTable[key] == null)
             {
                 // if the hashtable is empty then we return false

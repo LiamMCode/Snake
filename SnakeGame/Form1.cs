@@ -12,93 +12,56 @@ namespace SnakeGame
 {
     public partial class Form1 : Form
     {
-        private List<Circle> Snake = new List<Circle>(); // creating an list array for the snake
-        private Circle food = new Circle(); // creating a single Body class called food
+        private List<Circle> Snake = new(); // creating an list array for the snake
+        private Circle food = new(); // creating a single Body class called food
 
         public Form1()
         {
             InitializeComponent();
             new Settings(); // linking the Settings Class to this Form
 
+            gameTimer.Enabled = true;
             gameTimer.Interval = 1000 / Settings.Speed; // Changing the game time to settings speed
-            gameTimer.Tick += UpdateScreen; // linking a updateScreen function to the timer
+            gameTimer.Tick += new EventHandler(UpdateScreen); // linking a updateScreen function to the timer
+            pbCanvas.Paint += new PaintEventHandler(UpdateCanvas);
             gameTimer.Start(); // starting the timer
 
             StartGame(); // running the start game function
         }
 
-        private void Keyisdown(object sender, KeyEventArgs e)
+        private void UpdateScreen(object sender, EventArgs e)
         {
-            // the key down event will trigger the change state from the Input class
-            Input.ChangeState(e.KeyCode, true);
-        }
-
-        private void Keyisup(object sender, KeyEventArgs e)
-        {
-            // the key up event will trigger the change state from the Input class
-            Input.ChangeState(e.KeyCode, false);
-        }
-
-        private void UpdateCanvas(object sender, PaintEventArgs e)
-        {
-            Graphics canvas = e.Graphics; // create a new graphics class called canvas
-
-            if (Settings.GameOver == false)
+            // this is the Timers update screen function. each tick will run this function
+            if (Settings.GameOver == true)
             {
-                // if the game is not over then we do the following
-
-                Brush snakeColour; // create a new brush called snake colour
-
-                // run a loop to check the snake parts
-                for (int i = 0; i < Snake.Count; i++)
+                // if the game over is true and player presses enter the start game function is called
+                if (Input.KeyPress(Keys.Enter))
                 {
-                    if (i == 0)
-                    {
-                        // colour the head of the snake black
-                        snakeColour = Brushes.Red;
-                    }
-                    else
-                    {
-                        // the rest of the body can be green
-                        snakeColour = Brushes.Green;
-                    }
-                    //draw snake body and head
-                    canvas.FillEllipse(snakeColour,
-                                        new Rectangle(
-                                            Snake[i].X * Settings.Width,
-                                            Snake[i].Y * Settings.Height,
-                                            Settings.Width, Settings.Height
-                                            ));
-
-                    // draw food
-                    canvas.FillEllipse(Brushes.Pink,
-                                        new Rectangle(
-                                            food.X * Settings.Width,
-                                            food.Y * Settings.Height,
-                                            Settings.Width, Settings.Height
-                                            ));
+                    StartGame();
                 }
             }
             else
             {
-                // this part will run when the game is over it will show the game over text and make the label 3 visible on the screen
-
-                string gameOver = "Game Over \n" + "Final Score is " + Settings.Score + "\n Press enter to Restart \n";
-                label3.Text = gameOver;
-                label3.Visible = true;
+                //movement controls
+                if (Input.KeyPress(Keys.D) && Settings.direction != Directions.Left)
+                {
+                    Settings.direction = Directions.Right;
+                }
+                else if (Input.KeyPress(Keys.A) && Settings.direction != Directions.Right)
+                {
+                    Settings.direction = Directions.Left;
+                }
+                else if (Input.KeyPress(Keys.W) && Settings.direction != Directions.Down)
+                {
+                    Settings.direction = Directions.Up;
+                }
+                else if (Input.KeyPress(Keys.S) && Settings.direction != Directions.Up)
+                {
+                    Settings.direction = Directions.Down;
+                }
+                MoveSnake(); // run move player function
             }
-        }
-        private void StartGame()
-        {
-            label3.Visible = false; // set label 3 to invisible
-            new Settings(); // create a new instance of settings
-            Snake.Clear(); // clear all snake parts
-            Circle head = new Circle { X = 10, Y = 5 }; // create a new head for the snake
-            Snake.Add(head); // add the gead to the snake array
-
-            label2.Text = Settings.Score.ToString(); // show the score to the label 2
-            Settings.GameOver = false;
-            GenerateFood(); // run the generate food function
+            pbCanvas.Invalidate(); // refresh the picture box and update the graphics on it
         }
 
         private void MoveSnake()
@@ -169,13 +132,88 @@ namespace SnakeGame
             }
         }
 
+        private void Keyisdown(object sender, KeyEventArgs e)
+        {
+            // the key down event will trigger the change state from the Input class
+            Input.ChangeState(e.KeyCode, true);
+        }
+
+        private void Keyisup(object sender, KeyEventArgs e)
+        {
+            // the key up event will trigger the change state from the Input class
+            Input.ChangeState(e.KeyCode, false);
+        }
+
+        private void UpdateCanvas(object sender, PaintEventArgs e)
+        {
+            Graphics canvas = e.Graphics; // create a new graphics class called canvas
+
+            if (Settings.GameOver == false)
+            {
+                // if the game is not over then we do the following
+
+                Brush snakeColour; // create a new brush called snake colour
+
+                // run a loop to check the snake parts
+                for (int i = 0; i < Snake.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        // colour the head of the snake black
+                        snakeColour = Brushes.Red;
+                    }
+                    else
+                    {
+                        // the rest of the body can be green
+                        snakeColour = Brushes.Green;
+                    }
+                    //draw snake body and head
+                    canvas.FillEllipse(snakeColour,
+                                        new Rectangle(
+                                            Snake[i].X * Settings.Width,
+                                            Snake[i].Y * Settings.Height,
+                                            Settings.Width, Settings.Height
+                                            ));
+
+                    // draw food
+                    canvas.FillEllipse(Brushes.Blue,
+                                        new Rectangle(
+                                            food.X * Settings.Width,
+                                            food.Y * Settings.Height,
+                                            Settings.Width, Settings.Height
+                                            ));
+                }
+            }
+            else
+            {
+                // this part will run when the game is over it will show the game over text and make the label 3 visible on the screen
+
+                string gameOver = "Game Over \n" + "Final Score is " + Settings.Score + "\n Press enter to Restart \n";
+                label3.Text = gameOver;
+                label3.Visible = true;
+            }
+        }
+
+        private void StartGame()
+        {
+            label3.Visible = false; // set label 3 to invisible
+            new Settings(); // create a new instance of settings
+            Snake.Clear(); // clear all snake parts
+            Circle head = new() { X = 10, Y = 5 }; // create a new head for the snake
+            Snake.Add(head); // add the gead to the snake array
+
+            label2.Text = Settings.Score.ToString(); // show the score to the label 2
+            Settings.GameOver = false;
+            GenerateFood(); // run the generate food function
+        }
+
         private void GenerateFood()
         {
             int maxXpos = pbCanvas.Size.Width / Settings.Width;
             // create a maximum X position int with half the size of the play area
             int maxYpos = pbCanvas.Size.Height / Settings.Height;
             // create a maximum Y position int with half the size of the play area
-            Random rnd = new Random(); // create a new random class
+            Random rnd = new(); // create a new random class
             food = new Circle { X = rnd.Next(0, maxXpos), Y = rnd.Next(0, maxYpos) };
             // create a new food with a random x and y
         }
@@ -183,7 +221,7 @@ namespace SnakeGame
         {
             // add a part to body
 
-            Circle body = new Circle
+            Circle body = new()
             {
                 X = Snake[Snake.Count - 1].X,
                 Y = Snake[Snake.Count - 1].Y
@@ -199,41 +237,6 @@ namespace SnakeGame
         {
             // change the game over Boolean to true
             Settings.GameOver = true;
-        }
-        private void UpdateScreen(object sender, EventArgs e)
-        {
-            // this is the Timers update screen function. each tick will run this function
-            if (Settings.GameOver == true)
-            {
-                // if the game over is true and player presses enter the start game function is called
-                if (Input.KeyPress(Keys.Enter))
-                {
-                    StartGame();
-                }
-            }
-            else
-            {
-                //if the game is not over then the following commands will be executed
-                // below the actions will probe the keys being presse by the player and move the accordingly
-                if (Input.KeyPress(Keys.Right) && Settings.direction != Directions.Left)
-                {
-                    Settings.direction = Directions.Right;
-                }
-                else if (Input.KeyPress(Keys.Left) && Settings.direction != Directions.Right)
-                {
-                    Settings.direction = Directions.Left;
-                }
-                else if (Input.KeyPress(Keys.Up) && Settings.direction != Directions.Down)
-                {
-                    Settings.direction = Directions.Up;
-                }
-                else if (Input.KeyPress(Keys.Down) && Settings.direction != Directions.Up)
-                {
-                    Settings.direction = Directions.Down;
-                }
-                MoveSnake(); // run move player function
-            }
-            pbCanvas.Invalidate(); // refresh the picture box and update the graphics on it
         }
     }
 }
